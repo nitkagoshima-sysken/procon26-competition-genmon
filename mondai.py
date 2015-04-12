@@ -26,7 +26,7 @@ def create():
     field = create_panel(field_width, field_height, field_threshold)
     for i in range(0, 20):
         print("")
-        draw(create_block(0.4))
+        draw(create_block(random.random() * (blocks_threshold_max - blocks_threshold_min) + blocks_threshold_min))
 
 def create_panel(field_width, field_height, field_threshold):
     field = [[rand(field_threshold) if (i < field_height and j < field_width) else True for j in range(0, field_size_max)] for i in range(0, field_size_max)]
