@@ -50,9 +50,7 @@ def create_block(block_threshold):
             max = [[item], item_length]
         elif max[1] == item_length:
             max[0].append(item);
-    result = [[False for j in range(0, block_size_max)] for i in range(0, block_size_max)]
-    for cell in max[0][random.randint(0, len(max[0]) - 1)]:
-        result[cell[0]][cell[1]] = True
+    result = cells_to_block(max[0])
     negative_blocks, count = get_groups(result, False)
     if count > 0:
         for negative_block in negative_blocks:
@@ -63,6 +61,12 @@ def create_block(block_threshold):
                     break;
             if not contact_with_edge:
                 return create_block(block_threshold)
+    return result
+
+def cells_to_block(cells):
+    result = [[False for j in range(0, block_size_max)] for i in range(0, block_size_max)]
+    for cell in cells[random.randint(0, len(cells) - 1)]:
+        result[cell[0]][cell[1]] = True
     return result
 
 def get_groups(block, target=True):
