@@ -39,6 +39,23 @@ def create_panel(field_width, field_height, field_threshold):
 
 def create_block(block_threshold):
     block = [[rand(block_threshold) for j in range(0, block_size_max)] for i in range(0, block_size_max)]
+    blocks, count = get_groups(block)
+    if count < block_cells_min:
+        return create_block(block_threshold)
+    max = None
+    result_number = 0
+    for item in blocks:
+        item_length = len(item)
+        if max == None or max[1] < item_length:
+            max = [[item], item_length]
+        elif max[1] == item_length:
+            max[0].append(item);
+    result = [[False for j in range(0, block_size_max)] for i in range(0, block_size_max)]
+    for cell in max[0][random.randint(0, len(max[0]) - 1)]:
+        result[cell[0]][cell[1]] = True
+    return result
+
+def get_groups(block, target=True):
     used_block = [[False for j in range(0, block_size_max)] for i in range(0, block_size_max)]
     blocks = []
     count = 0
@@ -58,24 +75,11 @@ def create_block(block_threshold):
             if j < block_size_max - 1:
                 result.extend(find(i, j + 1))
         return result
-    if count < block_cells_min:
-        for i in range(0, block_size_max):
-            for j in range(0, block_size_max):
-                blocks.append(find(i, j))
-    else:
-        return create_block(block_threshold)
-    max = None
-    result_number = 0
-    for item in blocks:
-        item_length = len(item)
-        if max == None or max[1] < item_length:
-            max = [[item], item_length]
-        elif max[1] == item_length:
-            max[0].append(item);
-    result = [[False for j in range(0, block_size_max)] for i in range(0, block_size_max)]
-    for cell in max[0][random.randint(0, len(max[0]) - 1)]:
-        result[cell[0]][cell[1]] = True
-    return result
+    for i in range(0, block_size_max):
+        for j in range(0, block_size_max):
+            blocks.append(find(i, j))
+    print(blocks)
+    return blocks, count
 
 if __name__ == "__main__":
     create()
