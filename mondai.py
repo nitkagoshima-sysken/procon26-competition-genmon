@@ -23,7 +23,6 @@ def create():
     field_height = (int)(random.random() * (field_size_max - field_size_min) + field_size_min)
     field_threshold = random.random() * (field_threshold_max - field_threshold_min) + field_threshold_min
     field = create_panel(field_width, field_height, field_threshold)
-    draw(field)
 
 def create_panel(field_width, field_height, field_threshold):
     field = [[rand(field_threshold) if (i < field_height and j < field_width) else True for j in range(0, field_size_max)] for i in range(0, field_size_max)]
