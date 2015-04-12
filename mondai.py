@@ -39,7 +39,7 @@ def create_panel(field_width, field_height, field_threshold):
 
 def create_block(block_threshold):
     block = [[rand(block_threshold) for j in range(0, block_size_max)] for i in range(0, block_size_max)]
-    blocks, count = get_groups(block)
+    blocks, count = get_groups(block, True)
     if count < block_cells_min:
         return create_block(block_threshold)
     max = None
@@ -53,32 +53,47 @@ def create_block(block_threshold):
     result = [[False for j in range(0, block_size_max)] for i in range(0, block_size_max)]
     for cell in max[0][random.randint(0, len(max[0]) - 1)]:
         result[cell[0]][cell[1]] = True
+    negative_blocks, count = get_groups(result, False)
+    if count > 0:
+        for negative_block in negative_blocks:
+            contact_with_edge = False
+            for cell in negative_block:
+                if cell[0] == 0 or cell[0] == block_size_max - 1 or cell[1] == 0 or cell[1] == block_size_max - 1:
+                    contact_with_edge = True
+                    break;
+            if not contact_with_edge:
+                return create_block(block_threshold)
     return result
 
 def get_groups(block, target=True):
     used_block = [[False for j in range(0, block_size_max)] for i in range(0, block_size_max)]
     blocks = []
     count = 0
+    def check(i, j, target=True):
+        if 0 <= i < block_size_max and 0 <= j < block_size_max and block[i][j] == target and not used_block[i][j]:
+            return True
+        else:
+            return False
     def find(i, j, target=True):
         nonlocal count
         result = []
-        if block[i][j] == target and not used_block[i][j]:
+        if not used_block[i][j]:
             count = count + 1
             used_block[i][j] = True
             result.append((i, j))
-            if i > 0:
-                result.extend(find(i - 1, j))
-            if j > 0:
-                result.extend(find(i, j - 1))
-            if i < block_size_max - 1:
-                result.extend(find(i + 1, j))
-            if j < block_size_max - 1:
-                result.extend(find(i, j + 1))
+            if check(i - 1, j, target):
+                result.extend(find(i - 1, j, target))
+            if check(i, j - 1, target):
+                result.extend(find(i, j - 1, target))
+            if check(i + 1, j, target):
+                result.extend(find(i + 1, j, target))
+            if check(i, j + 1, target):
+                result.extend(find(i, j + 1, target))
         return result
     for i in range(0, block_size_max):
         for j in range(0, block_size_max):
-            blocks.append(find(i, j))
-    print(blocks)
+            if check(i, j, target):
+                blocks.append(find(i, j, target))
     return blocks, count
 
 if __name__ == "__main__":
