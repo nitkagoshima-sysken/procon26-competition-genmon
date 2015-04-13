@@ -47,7 +47,7 @@ def create_block(block_threshold):
     result_number = 0
     for item in blocks:
         item_length = len(item)
-        if item_length <= 16:
+        if 4 <= item_length <= 16:
             if max == None or max[1] < item_length:
                 max = [[item], item_length]
             elif max[1] == item_length:
