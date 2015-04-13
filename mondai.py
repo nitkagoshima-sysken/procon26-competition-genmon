@@ -18,11 +18,19 @@ sys.setrecursionlimit(100000)
 def rand(threshold=0.5):
     return random.random() < threshold
 
-def draw(lines, true="1", false="0"):
+def draw(problem, true="1", false="0"):
+    draw_block(problem[0], true, false)
+    print()
+    print(len(problem[1]))
+    for block in problem[1]:
+        draw_block(block, true, false)
+        print()
+
+def draw_block(lines, true="1", false="0"):
     for line in lines:
         print(" ".join([(true if x else false) for x in line]))
 
-def create(true="1", false="0"):
+def create():
     field_width = (int)(random.random() * (field_size_max - field_size_min) + field_size_min)
     field_height = (int)(random.random() * (field_size_max - field_size_min) + field_size_min)
     field_threshold = random.random() * (field_threshold_max - field_threshold_min) + field_threshold_min
@@ -121,10 +129,4 @@ def get_groups(block, target=True):
     return blocks, count
 
 if __name__ == "__main__":
-    panel, blocks = create("▪︎", " ")
-    draw(panel)
-    print()
-    print(len(blocks))
-    for block in blocks:
-        draw(block)
-        print()
+    draw(create(), "▪︎", " ")
