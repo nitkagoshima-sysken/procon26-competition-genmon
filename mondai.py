@@ -46,10 +46,13 @@ def create_block(block_threshold):
     result_number = 0
     for item in blocks:
         item_length = len(item)
-        if max == None or max[1] < item_length:
-            max = [[item], item_length]
-        elif max[1] == item_length:
-            max[0].append(item);
+        if item_length <= 16:
+            if max == None or max[1] < item_length:
+                max = [[item], item_length]
+            elif max[1] == item_length:
+                max[0].append(item);
+    if max == None:
+        return create_block(block_threshold)
     result = cells_to_block(max[0])
     negative_blocks, count = get_groups(result, False)
     if count > 0:
