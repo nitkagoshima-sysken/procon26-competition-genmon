@@ -15,18 +15,19 @@ blocks_threshold_max = 0.99
 def rand(threshold=0.5):
     return random.random() < threshold
 
-def draw(lines):
+def draw(lines, true="1", false="0"):
     for line in lines:
-        print(" ".join([("1" if x else "0") for x in line]))
+        print(" ".join([(true if x else false) for x in line]))
 
-def create():
+def create(true="1", false="0"):
     field_width = (int)(random.random() * (field_size_max - field_size_min) + field_size_min)
     field_height = (int)(random.random() * (field_size_max - field_size_min) + field_size_min)
     field_threshold = random.random() * (field_threshold_max - field_threshold_min) + field_threshold_min
     field = create_panel(field_width, field_height, field_threshold)
+    draw(field, true, false)
     for i in range(0, 20):
         print("")
-        draw(create_block(random.random() * (blocks_threshold_max - blocks_threshold_min) + blocks_threshold_min))
+        draw(create_block(random.random() * (blocks_threshold_max - blocks_threshold_min) + blocks_threshold_min), true, false)
 
 def create_panel(field_width, field_height, field_threshold):
     field = [[rand(field_threshold) if (i < field_height and j < field_width) else True for j in range(0, field_size_max)] for i in range(0, field_size_max)]
@@ -104,4 +105,4 @@ def get_groups(block, target=True):
     return blocks, count
 
 if __name__ == "__main__":
-    create()
+    create("▪︎", " ")
