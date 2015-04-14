@@ -20,14 +20,23 @@ def rand(threshold=0.5):
 
 def draw(problem, true="1", false="0"):
     draw_block(problem[0], true, false)
+    print()
     print(len(problem[1]))
+    first = True
     for block in problem[1]:
+        if not first:
+            print()
+            print()
         draw_block(block, true, false)
-        print()
+        first = False
 
 def draw_block(lines, true="1", false="0"):
+    first = True
     for line in lines:
-        print(" ".join([(true if x else false) for x in line]))
+        if not first:
+            print()
+        print("".join([(true if x else false) for x in line]), end="")
+        first = False
 
 def create():
     field_width = (int)(random.random() * (field_size_max - field_size_min) + field_size_min)
