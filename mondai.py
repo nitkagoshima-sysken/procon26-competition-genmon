@@ -4,7 +4,7 @@ import sys
 field_size_max = 32
 field_size_min = 20
 field_threshold_min = 0.00 #threshold of obstacle
-field_threshold_max = 0.30
+field_threshold_max = 0.25
 block_size_max = 8
 block_cells_min = 4
 blocks_ratio_min = 0.7 #blank cells in field / cells of blocks 
@@ -47,7 +47,7 @@ def create():
 
 def create_panel(field_width, field_height, field_threshold):
     field = [[rand(field_threshold) if (i < field_height and j < field_width) else True for j in range(0, field_size_max)] for i in range(0, field_size_max)]
-    if has_hole(get_groups(field, False)[0]):
+    if len(get_groups(field, False)[0]) > 1:
         return create_panel(field_width, field_height, field_threshold)
     n = 0
     for line in field:
@@ -75,15 +75,15 @@ def create_block(block_threshold):
     result = cells_to_block(max[0][random.randint(0, len(max[0]) - 1)])
     negative_blocks, count = get_groups(result, False)
     if count > 0:
-        if has_hole(negative_blocks):
+        if has_hole(negative_blocks, block_size_max, block_size_max):
             return create_block(block_threshold)
     return result, max[1]
 
-def has_hole(blocks):
+def has_hole(blocks, width, height):
     for block in blocks:
         contact_with_edge = False
         for cell in block:
-            if cell[0] == 0 or cell[0] == block_size_max - 1 or cell[1] == 0 or cell[1] == block_size_max - 1:
+            if cell[0] == 0 or cell[0] == height - 1 or cell[1] == 0 or cell[1] == width - 1:
                 contact_with_edge = True
                 break
         if not contact_with_edge:
@@ -97,11 +97,13 @@ def cells_to_block(cells):
     return result
 
 def get_groups(block, target=True):
-    used_block = [[False for j in range(0, block_size_max)] for i in range(0, block_size_max)]
+    block_width = len(block[0])
+    block_height = len(block)
+    used_block = [[False for j in range(0, block_width)] for i in range(0, block_height)]
     blocks = []
     count = 0
     def check(i, j, target=True):
-        if 0 <= i < block_size_max and 0 <= j < block_size_max and block[i][j] == target and not used_block[i][j]:
+        if 0 <= i < block_height and 0 <= j < block_width and block[i][j] == target and not used_block[i][j]:
             return True
         else:
             return False
@@ -121,11 +123,11 @@ def get_groups(block, target=True):
             if check(i, j + 1, target):
                 result.extend(find(i, j + 1, target))
         return result
-    for i in range(0, block_size_max):
-        for j in range(0, block_size_max):
+    for i in range(0, block_height):
+        for j in range(0, block_width):
             if check(i, j, target):
                 blocks.append(find(i, j, target))
     return blocks, count
 
 if __name__ == "__main__":
-    draw(create(), "▪︎", " ")
+    draw(create())
