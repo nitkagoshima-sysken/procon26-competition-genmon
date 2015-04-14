@@ -20,7 +20,6 @@ def rand(threshold=0.5):
 
 def draw(problem, true="1", false="0"):
     draw_block(problem[0], true, false)
-    print()
     print(len(problem[1]))
     for block in problem[1]:
         draw_block(block, true, false)
