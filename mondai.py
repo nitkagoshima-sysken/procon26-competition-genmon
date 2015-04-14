@@ -21,6 +21,7 @@ def rand(threshold=0.5):
 def draw(problem, true="1", false="0"):
     draw_block(problem[0], true, false)
     print()
+    print()
     print(len(problem[1]))
     first = True
     for block in problem[1]:
